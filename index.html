@@ -23,7 +23,13 @@
     </script>
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1284987576927786&ev=PageView&noscript=1"/></noscript>
     <!-- End Meta Pixel Code -->
-    <script type="module" crossorigin src="/assets/index-BJAwpYRn.js"></script>
+    <script>
+    // Ensure fbq Lead fires on form submit
+    window.fireMetaLead = function(service) {
+      if (window.fbq) { window.fbq('track', 'Lead', {content_name: service || 'Consultation', content_category: 'Home Care Lead', value: 0, currency: 'USD'}); }
+    };
+    </script>
+    <script type="module" crossorigin src="/assets/index-BvxGwn5_.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-cNgoU92q.css">
   </head>
   <body>
