@@ -35,23 +35,22 @@
       window.__shalemXid=xid;
       // Neutralize legacy browser-only fireMetaLead — CAPI relay handles Lead with deduped server-side mirror.
       window.fireMetaLead=function(){};
+      // Relay-level enrich hook: runs INSIDE the CAPI relay's fire() so the auto-Lead from form-submit is enriched too.
+      window.shalemCapiEnrich=function(name,user,custom){
+        user=user||{};custom=custom||{};
+        if(!user.external_id)user.external_id=xid;
+        if(!user.country)user.country='US';
+        if(name==='Lead'){
+          if(custom.value==null)custom.value=75;
+          if(!custom.currency)custom.currency='USD';
+          if(!custom.content_category)custom.content_category='home_care';
+          if(!custom.content_type)custom.content_type='lead_form';
+          if(!custom.content_name||custom.content_name==='website_form')custom.content_name='main_site_consultation';
+        }
+        return {user_data:user,custom_data:custom};
+      };
       function ready(cb){if(window.shalemCapi&&window.shalemCapi.fire)return cb();var t=0,iv=setInterval(function(){t++;if(window.shalemCapi&&window.shalemCapi.fire){clearInterval(iv);cb()}else if(t>60){clearInterval(iv)}},50)}
       ready(function(){
-        // Wrap fire(): auto-inject external_id+country on every event; merge value/currency/content fields on Lead.
-        var orig=window.shalemCapi.fire;
-        window.shalemCapi.fire=function(name,user,custom){
-          user=user||{};custom=custom||{};
-          if(!user.external_id)user.external_id=xid;
-          if(!user.country)user.country='US';
-          if(name==='Lead'){
-            if(custom.value==null)custom.value=75;
-            if(!custom.currency)custom.currency='USD';
-            if(!custom.content_category)custom.content_category='home_care';
-            if(!custom.content_type)custom.content_type='lead_form';
-            if(!custom.content_name)custom.content_name='main_site_consultation';
-          }
-          return orig.call(window.shalemCapi,name,user,custom);
-        };
         // ViewContent = engaged-session signal. Fires after 6s OR when user reaches the contact section.
         var vcFired=false;
         function fireVC(reason){if(vcFired)return;vcFired=true;window.shalemCapi.fire('ViewContent',{},{content_name:'consultation_page',content_category:'home_care',content_type:'main_site',source:reason})}
