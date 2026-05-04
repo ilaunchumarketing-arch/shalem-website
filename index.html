@@ -17,17 +17,49 @@
       gtag('js', new Date());
       gtag('config', 'AW-18057323571');
     </script>
-      <!-- Meta Pixel Code -->
+    <!-- Meta Pixel (init only — CAPI relay below fires deduped PageView via Conversions API with shared event_id) -->
     <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","1284987576927786");fbq("track","PageView");
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","1284987576927786");
     </script>
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1284987576927786&ev=PageView&noscript=1"/></noscript>
-    <!-- End Meta Pixel Code -->
+
+    <!-- Meta Conversions API relay (auto-fires PageView/Lead/Contact browser+server with shared event_id for dedup) -->
+    <script src="https://shalem-capi.ilaunchyou.workers.dev/shalem-capi.js" defer></script>
+
+    <!-- Meta match-quality upgrades (external_id, country, value/currency on Lead, ViewContent on engagement) -->
     <script>
-    // Ensure fbq Lead fires on form submit
-    window.fireMetaLead = function(service) {
-      if (window.fbq) { window.fbq('track', 'Lead', {content_name: service || 'Consultation', content_category: 'Home Care Lead', value: 0, currency: 'USD'}); }
-    };
+    (function(){
+      var XKEY='shalem_xid';
+      function uuid(){if(crypto&&crypto.randomUUID)return crypto.randomUUID();return'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=(Math.random()*16)|0;return(c==='x'?r:(r&0x3)|0x8).toString(16)})}
+      var xid;try{xid=localStorage.getItem(XKEY);if(!xid){xid=uuid();localStorage.setItem(XKEY,xid)}}catch(_){xid=uuid()}
+      window.__shalemXid=xid;
+      // Neutralize legacy browser-only fireMetaLead — CAPI relay handles Lead with deduped server-side mirror.
+      window.fireMetaLead=function(){};
+      function ready(cb){if(window.shalemCapi&&window.shalemCapi.fire)return cb();var t=0,iv=setInterval(function(){t++;if(window.shalemCapi&&window.shalemCapi.fire){clearInterval(iv);cb()}else if(t>60){clearInterval(iv)}},50)}
+      ready(function(){
+        // Wrap fire(): auto-inject external_id+country on every event; merge value/currency/content fields on Lead.
+        var orig=window.shalemCapi.fire;
+        window.shalemCapi.fire=function(name,user,custom){
+          user=user||{};custom=custom||{};
+          if(!user.external_id)user.external_id=xid;
+          if(!user.country)user.country='US';
+          if(name==='Lead'){
+            if(custom.value==null)custom.value=75;
+            if(!custom.currency)custom.currency='USD';
+            if(!custom.content_category)custom.content_category='home_care';
+            if(!custom.content_type)custom.content_type='lead_form';
+            if(!custom.content_name)custom.content_name='main_site_consultation';
+          }
+          return orig.call(window.shalemCapi,name,user,custom);
+        };
+        // ViewContent = engaged-session signal. Fires after 6s OR when user reaches the contact section.
+        var vcFired=false;
+        function fireVC(reason){if(vcFired)return;vcFired=true;window.shalemCapi.fire('ViewContent',{},{content_name:'consultation_page',content_category:'home_care',content_type:'main_site',source:reason})}
+        setTimeout(function(){fireVC('engaged_6s')},6000);
+        function checkScroll(){var c=document.getElementById('contact')||document.querySelector('form');if(!c)return;var r=c.getBoundingClientRect();if(r.top<window.innerHeight*0.75){fireVC('scroll_to_contact');window.removeEventListener('scroll',checkScroll)}}
+        window.addEventListener('scroll',checkScroll,{passive:true});
+      });
+    })();
     </script>
     <script type="module" crossorigin src="/assets/index-BvxGwn5_.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-cNgoU92q.css">
