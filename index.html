@@ -65,5 +65,23 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- WhatsApp click-to-chat -->
+    <a href="https://wa.me/14078185647?text=Hi%20Shalem%2C%20I%27d%20like%20to%20ask%20about%20home%20care%20services."
+       id="shalem-wa-btn"
+       target="_blank" rel="noopener"
+       aria-label="Chat with Shalem on WhatsApp"
+       onclick="try{window.shalemCapi&&window.shalemCapi.fire&&window.shalemCapi.fire('Contact',{},{content_name:'whatsapp_click',content_category:'home_care',content_type:'whatsapp'})}catch(e){}">
+      <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false">
+        <path fill="#fff" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8c1.8 1 3.9 1.5 6.2 1.5 7.2 0 13-5.8 13-13S23.2 3 16 3zm0 23.6c-2 0-3.9-.5-5.6-1.5l-.4-.2-4 1 1.1-3.9-.3-.4C5.6 19.9 5 18 5 16c0-6.1 4.9-11 11-11s11 4.9 11 11-4.9 10.6-11 10.6zm6.1-7.9c-.3-.2-2-1-2.3-1.1-.3-.1-.5-.2-.8.2-.2.3-.9 1.1-1.1 1.4-.2.2-.4.3-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.3-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.7-1-2.4-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.1 1.1-1.1 2.6c0 1.5 1.1 3 1.3 3.2.2.3 2.2 3.4 5.4 4.7.7.3 1.3.5 1.8.6.7.2 1.4.2 1.9.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5 0-.2-.3-.3-.6-.4z"/>
+      </svg>
+    </a>
+    <style>
+      #shalem-wa-btn{position:fixed;right:18px;bottom:18px;z-index:9999;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.18);transition:transform .15s ease,box-shadow .15s ease}
+      #shalem-wa-btn:hover{transform:scale(1.06);box-shadow:0 8px 22px rgba(0,0,0,.22)}
+      #shalem-wa-btn:focus-visible{outline:3px solid #7c3aed;outline-offset:3px}
+      @media (max-width:480px){#shalem-wa-btn{width:52px;height:52px;right:14px;bottom:14px}}
+      @media (prefers-reduced-motion:reduce){#shalem-wa-btn{transition:none}}
+    </style>
   </body>
 </html>
