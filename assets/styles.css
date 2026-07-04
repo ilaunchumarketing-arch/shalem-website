@@ -77,7 +77,7 @@ header.site{
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
   font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer;
-  border-radius:999px;padding:14px 28px;border:0;
+  border-radius:999px;padding:14px 24px;border:0;
   transition:background .2s,box-shadow .2s,color .2s;
   min-height:48px}
 .btn-gold{background:var(--gold);color:var(--navy);box-shadow:0 6px 20px rgba(245,166,35,.35)}
@@ -97,14 +97,13 @@ header.site{
   min-height:calc(100dvh - 110px);
   display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;
   padding:40px 0 56px}
-.hero-copy .attention{
-  font-size:.92rem;font-weight:700;color:var(--purple-deep);
-  background:var(--softpurple);border:1px solid var(--lilac);
-  border-radius:12px;padding:10px 16px;display:inline-block;margin-bottom:22px;line-height:1.45}
 .hero-copy h1{margin-bottom:20px}
 .hero-copy h1 em{font-style:italic;color:var(--purple-deep)}
 .hero-sub{font-size:1.14rem;color:var(--muted);max-width:56ch;margin-bottom:30px}
-.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.hero-ctas{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:26px;align-items:center}
+.hero-call{display:inline-flex;align-items:center;gap:8px;color:var(--navy);font-size:1rem;text-decoration:underline;text-underline-offset:4px;transition:color .2s}
+.hero-call:hover{color:var(--purple-deep)}
+.hero-call svg{color:var(--purple-deep)}
 .hero-proof{display:flex;gap:22px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
 .hero-proof span{display:inline-flex;align-items:center;gap:7px}
 .hero-proof svg{color:var(--purple-deep)}
